@@ -1,21 +1,23 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Vote } from "./components/Vote"
+import { getSongs, voteForSong } from './firebase';
 
 function App() {
-  // Create a list of songs with unique IDs
-  const songs = [
-    {id: '1', name: 'Tu mane sukūrei', album: 'Tu mane sukūrei (2017)', src: 'https://open.spotify.com/embed/track/7ip5Gqd3DrY1YUnAyprKlT?utm_source=generator&theme=0'},
-    {id: '2', name: 'Vienas Kūnas', album: 'Ateitis su Viltimi (2018)', src: 'https://open.spotify.com/embed/track/68UgdJ8QvKlopxr0VKWjNX?utm_source=generator'},
-    {id: '3', name: 'Pergalė prarijo mirtį', album: 'Meilė niekad nesibaigia (2021)', src: 'https://open.spotify.com/embed/track/7yC18wlmUqpxrHMSj6chqC?utm_source=generator'},
-  ]
-
-  // Initialize votes as an object where keys are song IDs and values are vote counts
+  const [songs, setSongs] = useState([])
   const [votes, setVotes] = useState({})
 
-  const handleClick = (id) => {
-    // Increment the vote count for the clicked song
-    setVotes({...votes, [id]: (votes[id] || 0) + 1})
-    console.log("clicked")
+  useEffect(() => {
+    const fetchSongs = async () => {
+      const fetchedSongs = await getSongs();
+      setSongs(fetchedSongs);
+      setVotes(fetchedSongs.reduce((votes, song) => ({ ...votes, [song.id]: song.votes }), {}));
+    };
+    fetchSongs();
+  }, []);
+
+  const handleClick = async (id) => {
+    await voteForSong(id);
+    setVotes({ ...votes, [id]: votes[id] + 1 });
   }
 
   // Sort the songs by vote count
@@ -50,4 +52,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
