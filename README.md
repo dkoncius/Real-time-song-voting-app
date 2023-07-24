@@ -8,3 +8,5 @@
 
 # Apsauga
 * https://console.firebase.google.com/project/songs-dd37b/appcheck
+
+# Prisijungimas per gmail ar facebook

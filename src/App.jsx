@@ -1,28 +1,55 @@
-import { useState } from "react"
-import { Vote } from "./components/Vote"
+import { useState, useEffect } from "react";
+import { Vote } from "./components/Vote";
+import { getSongs, voteForSong, signInWithToken, signInWithGoogle, signOutUser, auth } from './firebase';
 
 function App() {
-  // Create a list of songs with unique IDs
-  const songs = [
-    {id: '1', name: 'Tu mane sukūrei', album: 'Tu mane sukūrei (2017)', src: 'https://open.spotify.com/embed/track/7ip5Gqd3DrY1YUnAyprKlT?utm_source=generator&theme=0'},
-    {id: '2', name: 'Vienas Kūnas', album: 'Ateitis su Viltimi (2018)', src: 'https://open.spotify.com/embed/track/68UgdJ8QvKlopxr0VKWjNX?utm_source=generator'},
-    {id: '3', name: 'Pergalė prarijo mirtį', album: 'Meilė niekad nesibaigia (2021)', src: 'https://open.spotify.com/embed/track/7yC18wlmUqpxrHMSj6chqC?utm_source=generator'},
-  ]
+  const [songs, setSongs] = useState([]);
+  const [votes, setVotes] = useState({});
+  const [user, setUser] = useState(null);
 
-  // Initialize votes as an object where keys are song IDs and values are vote counts
-  const [votes, setVotes] = useState({})
+  useEffect(() => {
+    const fetchSongsAndSignIn = async () => {
+      // Fetch songs
+      const fetchedSongs = await getSongs();
+      setSongs(fetchedSongs);
+      setVotes(fetchedSongs.reduce((votes, song) => ({ ...votes, [song.id]: song.votes }), {}));
 
-  const handleClick = (id) => {
-    // Increment the vote count for the clicked song
-    setVotes({...votes, [id]: (votes[id] || 0) + 1})
-    console.log("clicked")
-  }
+      // Sign in user with custom token
+      const token = import.meta.env.VITE_APP_CUSTOM_TOKEN;
+      await signInWithToken(token);
+    };
+    
+    fetchSongsAndSignIn();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => setUser(user));
+    return () => unsubscribe();  // clean up on unmount
+  }, []);
+
+  const handleClick = async (id) => {
+    await voteForSong(id);
+    setVotes({ ...votes, [id]: votes[id] + 1 });
+  };
+
+  const handleSignOut = async () => {
+    await signOutUser();
+  };
 
   // Sort the songs by vote count
-  const sortedSongs = [...songs].sort((a, b) => (votes[b.id] || 0) - (votes[a.id] || 0))
+  const sortedSongs = [...songs].sort((a, b) => (votes[b.id] || 0) - (votes[a.id] || 0));
+
+  if (!user) {
+    return (
+      <div>
+        <button onClick={signInWithGoogle}>Sign In with Google</button>
+      </div>
+    );
+  }
 
   return (
     <>
+      <button onClick={handleSignOut}>Sign Out</button>  {/* Add sign out button */}
       <h1>Balsuokite už patikusias giesmes</h1>
       <table border="1">
         <thead>
@@ -47,7 +74,7 @@ function App() {
         </tbody>
       </table>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
