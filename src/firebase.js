@@ -1,8 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where } from 'firebase/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithCustomToken, signInWithRedirect } from "firebase/auth";
-
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,14 +24,25 @@ export const getSongs = async () => {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-export const voteForSong = async (id) => {
-  const songRef = doc(db, 'songs', id);
+export const voteForSong = async (userId, songId) => {
+  const votesRef = collection(db, 'votes');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
+  if (votesSnapshot.size >= 5) {
+    console.log("User has already voted 5 times today.");
+    return;
+  }
+
+  const songRef = doc(db, 'songs', songId);
   const songSnap = await getDoc(songRef);
   
   if (songSnap.exists()) {
     await updateDoc(songRef, { votes: increment(1) });
+    await addDoc(votesRef, { userId, songId, timestamp: new Date() }); // Add vote record
   } else {
-    console.log(`No song with ID ${id} exists.`);
+    console.log(`No song with ID ${songId} exists.`);
   }
 };
 
