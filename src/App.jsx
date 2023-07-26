@@ -27,10 +27,17 @@ function App() {
     return () => unsubscribe();  // clean up on unmount
   }, []);
 
-  const handleClick = async (id) => {
-    await voteForSong(id);
-    setVotes({ ...votes, [id]: votes[id] + 1 });
+  const handleClick = async (songId) => {
+    if (user) {
+      const voteSuccess = await voteForSong(user.uid, songId);
+      if (voteSuccess) {
+        setVotes({ ...votes, [songId]: votes[songId] + 1 });
+      }
+    } else {
+      console.log("User is not signed in.");
+    }
   };
+  
 
   const handleSignOut = async () => {
     await signOutUser();
