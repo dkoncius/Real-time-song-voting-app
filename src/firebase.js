@@ -31,6 +31,7 @@ export const voteForSong = async (userId, songId) => {
 
   const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
   if (votesSnapshot.size >= 5) {
+    alert("Išnaudojote dienos limitą. Penki balsai per dieną :)")
     console.log("User has already voted 5 times today.");
     return false;
   }

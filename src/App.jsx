@@ -30,7 +30,7 @@ function App() {
 
   return (
     <>
-      {user ? <button onClick={handleSignOut}>Sign Out</button> : <button onClick={signInWithGoogle}>Sign In with Google</button>}
+      {user ? <button onClick={handleSignOut}>Atsijungti</button> : <button onClick={signInWithGoogle}>Prisijungti su Google</button>}
       
       <div className="description">
         <h1>Balsuokite už patikusias giesmes</h1>
