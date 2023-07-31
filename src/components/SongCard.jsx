@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo, useMemo } from 'react';
-import { Vote } from "./Vote";
 import { voteForSong } from '../firebase';
 import { useInView } from 'react-intersection-observer';
 import Iframe from 'react-iframe';
@@ -37,7 +36,8 @@ const SongCard = memo(({ song, votes, user, setVotes, rank }) => {
             className="iframe"
           />
           <button className="votes-count">
-            <Vote vote={songVotes}/>
+            <i className="fa-solid fa-thumbs-up"></i>
+            <p>{songVotes}</p>
           </button>
         </div>
         }
