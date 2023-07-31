@@ -2,7 +2,7 @@
 * Galima ant eilutės paspaudimą padaryti
 * Galima ant nykščio
 * Ribotas balsavimas iki 5 balsų per dieną
-* Informuoti per alert arba rodant likusių balsų skaičių arba išjungiat hover efektą
+* Informuoti per apšvietimą balsų skaičiaus
 
 # Peržiūros logika
 * Galima pradžioje sąraša pateikti minimalistinį tik dainų
@@ -12,4 +12,5 @@
 * https://console.firebase.google.com/project/songs-dd37b/appcheck
 
 # Prisijungimas per gmail
-# loading grid
+# loading animation
+
