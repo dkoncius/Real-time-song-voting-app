@@ -53,8 +53,28 @@ header .header-votes {
   padding: 15px;
   font-size: 1.5em;
   border: 5px solid #8e8e8e;
+  transition: 0.3s;
 }
 
+/* Votes animation */
+
+@keyframes blink {
+  0% { background: #fff; color: #8e8e8e }
+  100% { background: #8e8e8e; color: white }
+}
+
+.blink {
+  animation: blink 1s linear;
+}
+
+header .no-votes-left {
+  background: #8e8e8e; 
+  color: white;
+  border: 5px solid white;
+}
+
+
+/* Header button */
 header button {
   position: absolute;
   top: -10px;
@@ -76,6 +96,7 @@ iframe {
   border-radius: 15px;
 }
 
+/* Description */
 .description {
   text-align: justify;
   width: 90%;
@@ -90,6 +111,11 @@ iframe {
   margin-bottom: 0.7em;
 }
 
+.description p {
+  margin-bottom: 30px;
+}
+
+/* Songs style */
 .songs-grid {
   width: 90%;
   max-width: 1444px;
@@ -104,7 +130,7 @@ iframe {
 .song-card {
   position: relative;
   text-align: center;
-  border: 5px solid white;
+  /* border: 5px solid white; */
   border-radius: 20px;
   opacity: 0;
   transition: 1s;
@@ -126,10 +152,14 @@ iframe {
   height: 60px;
   color: #8e8e8e;
   background: #fff;
-  box-shadow: 2px 2px 2px #8e8e8e;
-  border-radius: 10px 0 0 0;
+  border-radius: 10px 0 10px 0;
   z-index: 1;
-  transition: opacity 0.3s;
+  box-shadow: 0 0 0 white;
+  transition: 0.3s;
+}
+
+.song-card:hover .rank {
+   box-shadow: 0px 0px 2px white;
 }
 
 
@@ -151,6 +181,7 @@ iframe {
 }
 
 
+/* Media */
 @media (max-width: 768px) {
   .songs-grid {
     grid-template-columns: 1fr;
@@ -168,13 +199,7 @@ iframe {
   }
 }
 
-
 /* Loading screen */
 .iframe-wrapper {
-  /* Set the initial opacity to 0 */
   opacity: 0;
-}
-
-.iframe {
-  /* Add necessary styles */
 }

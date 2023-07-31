@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithCustomToken, signInWithRedirect } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -19,13 +19,16 @@ const provider = new GoogleAuthProvider();
 
 export { auth };
 
-export const getUserVotes = async (userId) => {
+export const getUserVotes = (userId, callback) => {
   const votesRef = collection(db, 'votes');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
-  return votesSnapshot.size;
+  const unsubscribe = onSnapshot(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)), (snapshot) => {
+    callback(snapshot.size);
+  });
+
+  return unsubscribe;
 };
 
 
