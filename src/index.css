@@ -64,9 +64,10 @@ iframe {
   left: 0px;
   width: 60px;
   height: 60px;
-  color: #fff;
-  background: #242424;
-  border-radius: 15px 0 0 0;
+  color: #8e8e8e;
+  background: #fff;
+  box-shadow: 2px 2px 2px #8e8e8e;
+  border-radius: 10px 0 0 0;
   transition: opacity 0.3s;
 }
 
