@@ -23,7 +23,7 @@ iframe {
   border-radius: 15px;
 }
 
-p {
+.description {
   text-align: justify;
   width: 90%;
   max-width: 1444px;
