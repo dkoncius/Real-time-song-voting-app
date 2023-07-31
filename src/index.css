@@ -31,6 +31,10 @@ iframe {
   margin-bottom: 20px;
 }
 
+.description h1 {
+  text-align: start;
+}
+
 .songs-grid {
   width: 90%;
   max-width: 1444px;
@@ -47,7 +51,8 @@ iframe {
   text-align: center;
   border: 5px solid white;
   border-radius: 20px;
-  transition: 0.3s;
+  opacity: 0;
+  transition: 1s;
 }
 
 .song-card:hover {
@@ -68,6 +73,7 @@ iframe {
   background: #fff;
   box-shadow: 2px 2px 2px #8e8e8e;
   border-radius: 10px 0 0 0;
+  z-index: 1;
   transition: opacity 0.3s;
 }
 
@@ -105,4 +111,15 @@ iframe {
   .songs-grid {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+
+/* Loading screen */
+.iframe-wrapper {
+  /* Set the initial opacity to 0 */
+  opacity: 0;
+}
+
+.iframe {
+  /* Add necessary styles */
 }
