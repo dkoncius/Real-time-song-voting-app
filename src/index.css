@@ -17,34 +17,85 @@
 }
 
 iframe {
-  height: 152px;
+  width: 100%;
+  height: 352px;
   border: none;
+  border-radius: 15px;
 }
 
-table {
+p {
+  text-align: justify;
+  width: 90%;
+  max-width: 1444px;
   margin: auto;
+  margin-bottom: 20px;
 }
 
-table:hover tr {
-  opacity: 0.5;
-}
-
-table tr:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-
-tr:not:first-of-type {
-  height: 152px;
-  
+.songs-grid {
+  width: 90%;
+  max-width: 1444px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin: auto;
   transition: 0.3s;
 }
 
-
-tr:hover i {
-  color: red;
+.song-card {
+  position: relative;
+  text-align: center;
+  border: 5px solid white;
+  border-radius: 20px;
+  transition: 0.3s;
 }
 
-td, th {
+.song-card:hover {
+  background: white;
+}
+
+.rank {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  top: 0px;
+  left: 0px;
+  width: 60px;
+  height: 60px;
+  color: #fff;
   background: #242424;
+  border-radius: 15px 0 0 0;
+  transition: opacity 0.3s;
+}
+
+
+.votes-count {
+  width: 100%;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  gap: 10px;
+  font-size: 2.2em;
+}
+
+.song-card:hover .votes-count {
+  cursor: pointer;
+  color: black;
+}
+
+
+@media (max-width: 768px) {
+  .songs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .songs-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
