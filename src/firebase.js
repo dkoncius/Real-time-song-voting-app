@@ -4,13 +4,14 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChang
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYsA1Acby612nPLB_3gDEiFEDkoJtCVE0",
-  authDomain: "songs-dd37b.firebaseapp.com",
-  projectId: "songs-dd37b",
-  storageBucket: "songs-dd37b.appspot.com",
-  messagingSenderId: "107434964500",
-  appId: "1:107434964500:web:a7f835058e2315862bd901"
+  apiKey: import.meta.env.VITE_APP_CUSTOM_API_KEY,
+  authDomain: import.meta.env.VITE_APP_CUSTOM_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_APP_CUSTOM_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_APP_CUSTOM_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_APP_CUSTOM_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_CUSTOM_APP_ID
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
