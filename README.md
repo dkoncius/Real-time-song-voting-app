@@ -1,6 +1,8 @@
 # Balsavimo logika
 * Galima ant eilutės paspaudimą padaryti
 * Galima ant nykščio
+* Ribotas balsavimas iki 5 balsų per dieną
+* Informuoti per alert arba rodant likusių balsų skaičių arba išjungiat hover efektą
 
 # Peržiūros logika
 * Galima pradžioje sąraša pateikti minimalistinį tik dainų
@@ -9,4 +11,5 @@
 # Apsauga
 * https://console.firebase.google.com/project/songs-dd37b/appcheck
 
-# Prisijungimas per gmail ar facebook
+# Prisijungimas per gmail
+# loading grid

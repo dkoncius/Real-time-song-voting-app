@@ -31,8 +31,9 @@ export const voteForSong = async (userId, songId) => {
 
   const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
   if (votesSnapshot.size >= 5) {
+    alert("Išnaudojote dienos limitą. Penki balsai per dieną :)")
     console.log("User has already voted 5 times today.");
-    return;
+    return false;
   }
 
   const songRef = doc(db, 'songs', songId);
@@ -41,25 +42,14 @@ export const voteForSong = async (userId, songId) => {
   if (songSnap.exists()) {
     await updateDoc(songRef, { votes: increment(1) });
     await addDoc(votesRef, { userId, songId, timestamp: new Date() }); // Add vote record
+    return true;
   } else {
     console.log(`No song with ID ${songId} exists.`);
-  }
-};
-
-export const signInWithToken = async (token) => {
-  try {
-    const userCredential = await signInWithCustomToken(auth, token);
-    const user = userCredential.user;
-    console.log("Signed in user:", user);
-  } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error('Error signing in with custom token:', errorMessage);
+    return false;
   }
 };
 
 export const signInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
   try {
     await signInWithRedirect(auth, provider);
   } catch (error) {
