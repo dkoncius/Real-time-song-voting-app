@@ -23,9 +23,14 @@ const Login = ({ user, setUser }) => {
   return (
     <header>
         <div className="container">
+          {
+            user && 
+
             <h3 className="header-votes">
-                BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
+              BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
             </h3>
+          }
+           
            
             {user ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
