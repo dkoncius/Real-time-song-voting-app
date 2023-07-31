@@ -19,6 +19,16 @@ const provider = new GoogleAuthProvider();
 
 export { auth };
 
+export const getUserVotes = async (userId) => {
+  const votesRef = collection(db, 'votes');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
+  return votesSnapshot.size;
+};
+
+
 export const getSongs = async () => {
   const snapshot = await getDocs(collection(db, 'songs'));
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
