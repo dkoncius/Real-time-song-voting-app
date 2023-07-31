@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #8e8e8e;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -38,6 +38,7 @@ iframe {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
   margin: auto;
+  margin-bottom: 100px;
   transition: 0.3s;
 }
 
@@ -79,18 +80,23 @@ iframe {
   background: none;
   border: none;
   gap: 10px;
-  font-size: 2.2em;
+  font-size: 1.8em;
 }
 
 .song-card:hover .votes-count {
   cursor: pointer;
-  color: black;
+  color: #8e8e8e;
 }
 
 
 @media (max-width: 768px) {
   .songs-grid {
     grid-template-columns: 1fr;
+  }
+
+  .description h1 {
+    text-align: center;
+    font-size: 1.5em;
   }
 }
 

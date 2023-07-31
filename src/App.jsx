@@ -49,8 +49,6 @@ function App() {
           <SongCard key={song.id} song={song} votes={votes} user={user} setVotes={setVotes} rank={index + 1} />
         ))}
       </div>}
-
-    
     </>
   );
 }
