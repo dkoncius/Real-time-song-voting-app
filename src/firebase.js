@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithCustomToken, signInWithRedirect } from "firebase/auth";
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot, setDoc } from 'firebase/firestore';
+import { getAuth, signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,13 +13,9 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_CUSTOM_APP_ID
 };
 
-console.log(import.meta.env.VITE_APP_CUSTOM_API_KEY)
-
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
 export { auth };
 
@@ -65,11 +62,53 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
+// Login with google
 export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
   try {
     await signInWithRedirect(auth, provider);
   } catch (error) {
-    console.error('Error signing in with Google:', error);
+    throw error;
+  }
+};
+
+
+// Login with email
+export const checkUserExists = async (email) => {
+  const usersRef = collection(db, 'users');
+  const snapshot = await getDocs(query(usersRef, where("email", "==", email)));
+
+  return snapshot.size > 0;
+};
+
+
+export const addUser = async (email) => {
+  const userRef = doc(db, 'users', email);
+  await setDoc(userRef, { email });
+
+  // Send the sign-in link after creating the user
+  const actionCodeSettings = {
+    url: window.location.href,
+    handleCodeInApp: true,
+  };
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+};
+export const sendLoginLink = async (email) => {
+  const actionCodeSettings = {
+    url: window.location.href, // The URL to redirect to for sign-in completion.
+    handleCodeInApp: true // This must be true for email link sign-in.
+  };
+
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+};
+
+export const confirmSignIn = async (email) => {
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    try {
+      await signInWithEmailLink(auth, email, window.location.href);
+    } catch (error) {
+      throw error;
+    }
   }
 };
 

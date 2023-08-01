@@ -40,15 +40,13 @@ header {
 header .container {
   width: 90%;
   max-width: 1440px;
-  display: flex;
-  justify-content: space-between;
   margin: auto;
   position: relative;
+  text-align: right;
 }
 
 header .header-votes {
   position: absolute;
-  top: -20px;
   background: white;
   padding: 15px;
   font-size: 1.5em;
@@ -75,19 +73,18 @@ header .no-votes-left {
 
 
 /* Header button */
-header button {
+/* header button {
   position: absolute;
   top: -10px;
   right: 0px;
   padding: 5px 10px;
   cursor: pointer;
   border: none;
-  /* border-radius: 5px; */
 }
 
 header button:hover {
   background: black;
-}
+} */
 
 iframe {
   width: 100%;
@@ -202,4 +199,30 @@ iframe {
 /* Loading screen */
 .iframe-wrapper {
   opacity: 0;
+}
+
+
+/* Login form */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  position: absolute;
+  top: 200px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  border-radius: 5px;
+  padding: 30px;
+}
+
+form input, button {
+  padding: 10px;
+  outline: none;
+  border: none;
 }
