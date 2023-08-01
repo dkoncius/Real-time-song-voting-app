@@ -7,7 +7,7 @@ import { getSongs } from './firebase';
 function App() {
   const [songs, setSongs] = useState([]);
   const [votes, setVotes] = useState({});
-  const [user, setUser] = useState(null); // Move user state to App component
+  const [user, setUser] = useState(null); 
 
   useEffect(() => {
     const fetchSongs = async () => {

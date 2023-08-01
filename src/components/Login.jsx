@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { signInWithGoogle, signOutUser, auth, getUserVotes } from '../firebase';
+import { signOutUser, auth, getUserVotes } from '../firebase';
+import LoginForm from './LoginForm';
 
 const MAX_VOTES = 5;
 
@@ -7,6 +8,7 @@ const Login = ({ user, setUser }) => {
   const [votes, setVotes] = useState(0);
   const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
   const [isBlinking, setIsBlinking] = useState(false);
+  const [showingForm, setShowingForm] = useState(false);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(user => {
@@ -53,7 +55,9 @@ const Login = ({ user, setUser }) => {
            
             {user ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
-            <button onClick={signInWithGoogle}>Prisijungti su Google</button>}
+            <button onClick={() => setShowingForm(true)}>Prisijungti</button>}
+
+            {showingForm && <LoginForm setShowingForm={setShowingForm} />}
         </div>
     </header>
   );

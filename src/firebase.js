@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithCustomToken, signInWithRedirect } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,13 +12,9 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_CUSTOM_APP_ID
 };
 
-console.log(import.meta.env.VITE_APP_CUSTOM_API_KEY)
-
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
 export { auth };
 
@@ -65,13 +61,24 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-export const signInWithGoogle = async () => {
+export const signUpWithEmail = async (email, password) => {
   try {
-    await signInWithRedirect(auth, provider);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return { user: userCredential.user };
   } catch (error) {
-    console.error('Error signing in with Google:', error);
+    return { error: error.message };
   }
 };
+
+export const signInWithEmail = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return { user: userCredential.user };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 
 export const signOutUser = async () => {
   try {
