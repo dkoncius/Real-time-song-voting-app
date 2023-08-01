@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { signOutUser, auth, getUserVotes } from '../firebase';
-import LoginForm from './LoginForm';
+import { signOutUser, auth, getUserVotes, signInWithGoogle } from '../firebase';
+import LoginWithEmail from './LoginWithEmail';
 
 const MAX_VOTES = 5;
 
@@ -9,6 +9,8 @@ const Login = ({ user, setUser }) => {
   const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
   const [isBlinking, setIsBlinking] = useState(false);
   const [showingForm, setShowingForm] = useState(false);
+
+  const isAppleDevice = navigator.userAgent.match(/(Mac|iPhone|iPod|iPad)/i);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(user => {
@@ -38,6 +40,21 @@ const Login = ({ user, setUser }) => {
     };
   }, [setUser, unsubscribeVotes, votes]);
 
+  const handleSignIn = () => {
+    if (!isAppleDevice) {
+      signInWithGoogle()
+        .then((userCredential) => {
+          setUser(userCredential.user);
+          setShowingForm(false);
+        })
+        .catch((error) => {
+          console.error("Error signing in with Google", error);
+        });
+    } else {
+      setShowingForm(true);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOutUser();
   };
@@ -55,9 +72,9 @@ const Login = ({ user, setUser }) => {
            
             {user ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
-            <button onClick={() => setShowingForm(true)}>Prisijungti</button>}
+            <button onClick={handleSignIn}>{isAppleDevice ? 'Prisijungti' : 'Prisijungti su Google'}</button>}
 
-            {showingForm && <LoginForm setShowingForm={setShowingForm} />}
+            {showingForm && <LoginWithEmail setShowingForm={setShowingForm} />}
         </div>
     </header>
   );

@@ -1,19 +1,20 @@
 // LoginForm.jsx
+
 import { useState, useEffect } from 'react';
 import { checkUserExists, confirmSignIn } from '../firebase';
-import RegisterForm from './RegisterForm'; 
+import RegisterForm from './RegisterForm';
 
-const LoginForm = ({ setShowingForm }) => {
+const LoginWithEmail = ({ setShowingForm }) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [showRegisterForm, setShowRegisterForm] = useState(false); 
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-
     const userExists = await checkUserExists(email);
     if(userExists) {
       // Login user here
+      // You need to replace this with your own logic
     } else {
       setShowRegisterForm(true);
     }
@@ -49,4 +50,4 @@ const LoginForm = ({ setShowingForm }) => {
   );
 };
 
-export default LoginForm;
+export default LoginWithEmail;

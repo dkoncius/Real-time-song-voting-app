@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot, setDoc } from 'firebase/firestore';
-import { getAuth, signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { getAuth, signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 
 
 // Your web app's Firebase configuration
@@ -62,13 +62,18 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-// export const userExists = async (email) => {
-//   const userRef = doc(db, 'users', email);
-//   const docSnap = await getDoc(userRef);
-  
-//   return docSnap.exists();
-// };
+// Login with google
+export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    await signInWithRedirect(auth, provider);
+  } catch (error) {
+    throw error;
+  }
+};
 
+
+// Login with email
 export const checkUserExists = async (email) => {
   const usersRef = collection(db, 'users');
   const snapshot = await getDocs(query(usersRef, where("email", "==", email)));
