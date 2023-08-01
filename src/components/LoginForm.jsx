@@ -1,27 +1,37 @@
-import { useState } from 'react';
-import { signInWithEmail } from '../firebase';
-import SignUpForm from './SignUpForm';
+// LoginForm.jsx
+import { useState, useEffect } from 'react';
+import { checkUserExists, confirmSignIn } from '../firebase';
+import RegisterForm from './RegisterForm'; 
 
 const LoginForm = ({ setShowingForm }) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showSignUpForm, setShowSignUpForm] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [showRegisterForm, setShowRegisterForm] = useState(false); 
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    const response = await signInWithEmail(email, password);
-    if(response.error) {
-      setError(response.error);
+
+    const userExists = await checkUserExists(email);
+    if(userExists) {
+      // Login user here
     } else {
-      setEmail('');
-      setPassword('');
-      setShowingForm(false);
+      setShowRegisterForm(true);
     }
   };
 
-  if (showSignUpForm) {
-    return <SignUpForm setShowSignUpForm={setShowSignUpForm} />;
+  useEffect(() => {
+    if (window.location.href.includes('firebaseauth')) {
+      confirmSignIn(window.localStorage.getItem('emailForSignIn'))
+      .then(() => setShowingForm(false))
+      .catch((error) => {
+        setError("Error signing in with email link. Please try again.");
+        console.error("Error signing in with email link", error);
+      });
+    }
+  }, []);
+
+  if (showRegisterForm) {
+    return <RegisterForm setShowingForm={setShowingForm} />
   }
 
   return (
@@ -33,16 +43,8 @@ const LoginForm = ({ setShowingForm }) => {
         onChange={e => setEmail(e.target.value)} 
         required 
       />
-      <input 
-        type="password" 
-        placeholder="Enter password" 
-        value={password} 
-        onChange={e => setPassword(e.target.value)} 
-        required 
-      />
       <button type="submit">Prisijungti</button>
       {error && <p>{error}</p>}
-      <p>Naujas vartotojas? <span onClick={() => setShowSignUpForm(true)}>Registruotis</span></p>
     </form>
   );
 };

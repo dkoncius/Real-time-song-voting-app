@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot, setDoc } from 'firebase/firestore';
+import { getAuth, signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -61,24 +62,50 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-export const signUpWithEmail = async (email, password) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return { user: userCredential.user };
-  } catch (error) {
-    return { error: error.message };
-  }
+// export const userExists = async (email) => {
+//   const userRef = doc(db, 'users', email);
+//   const docSnap = await getDoc(userRef);
+  
+//   return docSnap.exists();
+// };
+
+export const checkUserExists = async (email) => {
+  const usersRef = collection(db, 'users');
+  const snapshot = await getDocs(query(usersRef, where("email", "==", email)));
+
+  return snapshot.size > 0;
 };
 
-export const signInWithEmail = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return { user: userCredential.user };
-  } catch (error) {
-    return { error: error.message };
-  }
+
+export const addUser = async (email) => {
+  const userRef = doc(db, 'users', email);
+  await setDoc(userRef, { email });
+
+  // Send the sign-in link after creating the user
+  const actionCodeSettings = {
+    url: window.location.href,
+    handleCodeInApp: true,
+  };
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+};
+export const sendLoginLink = async (email) => {
+  const actionCodeSettings = {
+    url: window.location.href, // The URL to redirect to for sign-in completion.
+    handleCodeInApp: true // This must be true for email link sign-in.
+  };
+
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 };
 
+export const confirmSignIn = async (email) => {
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    try {
+      await signInWithEmailLink(auth, email, window.location.href);
+    } catch (error) {
+      throw error;
+    }
+  }
+};
 
 export const signOutUser = async () => {
   try {
