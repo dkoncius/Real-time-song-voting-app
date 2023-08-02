@@ -8,6 +8,11 @@ const SignUpForm = ({ setShowSignUpForm }) => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; // checks for at least one letter, one number and minimum length of 6
+    if (!passwordRegex.test(password)) {
+      setError('Slaptažodis turėtų būti sudėtingesnis ir turėti bent vieną skaičių :)');
+      return;
+    }
     const response = await signUpWithEmail(email, password);
     if(response.error) {
       setError(response.error);
@@ -35,6 +40,7 @@ const SignUpForm = ({ setShowSignUpForm }) => {
         required 
       />
       <button type="submit">Register</button>
+      <button onClick={() => setShowSignUpForm(false)}>Cancel</button> {/* New Cancel button */}
       {error && <p>{error}</p>}
     </form>
   );

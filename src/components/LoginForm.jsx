@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { signInWithEmail } from '../firebase';
+import { useState, useEffect } from 'react';
+import { auth, signInWithEmail } from '../firebase';
 import SignUpForm from './SignUpForm';
 
 const LoginForm = ({ setShowingForm }) => {
@@ -7,6 +7,15 @@ const LoginForm = ({ setShowingForm }) => {
   const [password, setPassword] = useState("");
   const [showSignUpForm, setShowSignUpForm] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null); // new state to track the current user
+
+  // Listen to auth state changes
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setUser(user);
+    });
+    return unsubscribe; // make sure to unsubscribe on component unmount
+  }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -19,6 +28,8 @@ const LoginForm = ({ setShowingForm }) => {
       setShowingForm(false);
     }
   };
+
+  if (user) return null; // if a user is authenticated, don't show the form
 
   if (showSignUpForm) {
     return <SignUpForm setShowSignUpForm={setShowSignUpForm} />;
