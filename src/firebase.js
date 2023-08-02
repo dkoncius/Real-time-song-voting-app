@@ -1,8 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, signOut, GoogleAuthProvider,  signInWithRedirect, OAuthProvider  } from "firebase/auth";
+import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APP_CUSTOM_API_KEY,
   authDomain: import.meta.env.VITE_APP_CUSTOM_AUTH_DOMAIN,
@@ -16,8 +15,30 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-export { auth };
+// Firebase sign in anonymously
+export const signInAnonymouslyUser = async () => {
+  try {
+    await signInAnonymously(auth);
+  } catch (error) {
+    throw error;
+  }
+};
 
+// Firebase observe auth state change
+export const observeAuth = (callback) => {
+  return onAuthStateChanged(auth, callback);
+};
+
+// Firebase sign out
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Voting logic
 export const getUserVotes = (userId, callback) => {
   const votesRef = collection(db, 'votes');
   const today = new Date();
@@ -61,32 +82,4 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-// Sign in with google
-export const signInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  try {
-    await signInWithRedirect(auth, provider);
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Sign in with Apple
-export const signInWithApple = async () => {
-  const provider = new OAuthProvider('apple.com');
-  try {
-    await signInWithRedirect(auth, provider);
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Sign out
-export const signOutUser = async () => {
-  try {
-    await signOut(auth);
-    console.log('User signed out');
-  } catch (error) {
-    console.error('Error signing out:', error);
-  }
-};
+export { auth, db };

@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import { signOutUser, auth, getUserVotes } from '../firebase';
-import GoogleAuth from './GoogleAuth';
-import AppleAuth from './AppleAuth';
+import AnonymousAuth from './AnonymousAuth';
 
 const MAX_VOTES = 5;
 
-const Login = ({ user, setUser }) => {
+const Login = ({ setUser }) => {
   const [votes, setVotes] = useState(0);
   const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
   const [isBlinking, setIsBlinking] = useState(false);
-
-  const isAppleDevice = navigator.userAgent.match(/(Mac|iPhone|iPod|iPad)/i);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(user => {
@@ -48,16 +45,16 @@ const Login = ({ user, setUser }) => {
     <header>
         <div className="container">
           {
-            user && 
+            auth.currentUser && 
 
             <h3 className={`header-votes ${isBlinking ? 'blink' : ''} ${votes >= MAX_VOTES ? 'no-votes-left' : ''}`}>
-              BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
+              BALSAI: <span>{auth.currentUser ? MAX_VOTES - votes : 0}</span>
             </h3>
           }
            
-            {user ? 
+            {auth.currentUser ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
-            (isAppleDevice ? <AppleAuth setUser={setUser} /> : <GoogleAuth setUser={setUser} />)}
+            <AnonymousAuth setUser={setUser} />}
         </div>
     </header>
   );
