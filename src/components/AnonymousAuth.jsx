@@ -1,52 +1,48 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { signInAnonymouslyUser, signOutUser, observeAuth } from '../firebase.js';
 
-class AnonymousAuth extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null
-    };
-  }
+const AnonymousAuth = () => {
+  const [user, setUser] = useState(null);
 
-  componentDidMount() {
-    this.unsubscribe = observeAuth((user) => {
-      this.setState({ user: user });
+  useEffect(() => {
+    const existingUserId = localStorage.getItem('userId');
+
+    if (!existingUserId) {
+      signInAnonymouslyUser();
+    }
+
+    const unsubscribe = observeAuth((user) => {
+      if (user) {
+        localStorage.setItem('userId', user.uid);
+        setUser(user);
+      } else {
+        localStorage.removeItem('userId');
+        setUser(null);
+      }
     });
-  }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
-  signIn = async () => {
-    try {
-      await signInAnonymouslyUser();
-    } catch (error) {
-      console.error('Anonymous sign-in failed', error);
-    }
+  const handleSignOut = async () => {
+    await signOutUser();
   };
 
-  signOut = async () => {
-    try {
-      await signOutUser();
-    } catch (error) {
-      console.error('Sign out failed', error);
-    }
+  const handleSignIn = async () => {
+    await signInAnonymouslyUser();
   };
 
-  render() {
-    const { user } = this.state;
-    return (
-      <div>
-        { user ? (
-            <button onClick={this.signOut}>Log Out</button>
-          ) : (
-            <button onClick={this.signIn}>Anonymous Log In</button>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      { user ? (
+        <button onClick={handleSignOut}>Log Out</button>
+      ) : (
+        <button onClick={handleSignIn}>Anonymous Log In</button>
+      )}
+    </div>
+  );
+};
 
 export default AnonymousAuth;
