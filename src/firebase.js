@@ -15,30 +15,21 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Firebase sign in anonymously
+// Listen for auth state changes
+export const observeAuth = setUser => {
+  return onAuthStateChanged(auth, setUser);
+};
+
+// Sign in as an anonymous user
 export const signInAnonymouslyUser = async () => {
-  try {
-    await signInAnonymously(auth);
-  } catch (error) {
-    throw error;
-  }
+  await signInAnonymously(auth);
 };
 
-// Firebase observe auth state change
-export const observeAuth = (callback) => {
-  return onAuthStateChanged(auth, callback);
-};
-
-// Firebase sign out
+// Sign out the current user
 export const signOutUser = async () => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    throw error;
-  }
+  await signOut(auth);
 };
 
-// Voting logic
 export const getUserVotes = (userId, callback) => {
   const votesRef = collection(db, 'votes');
   const today = new Date();

@@ -4,7 +4,8 @@ import AnonymousAuth from './AnonymousAuth';
 
 const MAX_VOTES = 5;
 
-const Login = ({ setUser }) => {
+const Login = () => {
+  const [user, setUser] = useState(null);
   const [votes, setVotes] = useState(0);
   const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
   const [isBlinking, setIsBlinking] = useState(false);
@@ -35,7 +36,7 @@ const Login = ({ setUser }) => {
         unsubscribeVotes();
       }
     };
-  }, [setUser, unsubscribeVotes, votes]);
+  }, [unsubscribeVotes, votes]);
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -44,15 +45,12 @@ const Login = ({ setUser }) => {
   return (
     <header>
         <div className="container">
-          {
-            auth.currentUser && 
-
+          {user && 
             <h3 className={`header-votes ${isBlinking ? 'blink' : ''} ${votes >= MAX_VOTES ? 'no-votes-left' : ''}`}>
-              BALSAI: <span>{auth.currentUser ? MAX_VOTES - votes : 0}</span>
+              BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
             </h3>
           }
-           
-            {auth.currentUser ? 
+          {user ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
             <AnonymousAuth setUser={setUser} />}
         </div>
