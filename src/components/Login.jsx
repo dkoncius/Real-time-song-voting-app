@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { signOutUser, auth, getUserVotes } from '../firebase';
-import AnonymousAuth from './AnonymousAuth';
+import LoginForm from './LoginForm';
 
 const MAX_VOTES = 5;
 
-const Login = () => {
-  const [user, setUser] = useState(null);
+const Login = ({ user, setUser }) => {
   const [votes, setVotes] = useState(0);
   const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
   const [isBlinking, setIsBlinking] = useState(false);
+  const [showingForm, setShowingForm] = useState(false);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(user => {
@@ -36,7 +36,7 @@ const Login = () => {
         unsubscribeVotes();
       }
     };
-  }, [unsubscribeVotes, votes]);
+  }, [setUser, unsubscribeVotes, votes]);
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -45,14 +45,19 @@ const Login = () => {
   return (
     <header>
         <div className="container">
-          {user && 
+          {
+            user && 
+
             <h3 className={`header-votes ${isBlinking ? 'blink' : ''} ${votes >= MAX_VOTES ? 'no-votes-left' : ''}`}>
               BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
             </h3>
           }
-          {user ? 
+           
+            {user ? 
             <button onClick={handleSignOut}>Atsijungti</button> : 
-            <AnonymousAuth setUser={setUser} />}
+            <button onClick={() => setShowingForm(true)}>Prisijungti</button>}
+
+            {showingForm && <LoginForm setShowingForm={setShowingForm} />}
         </div>
     </header>
   );

@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APP_CUSTOM_API_KEY,
   authDomain: import.meta.env.VITE_APP_CUSTOM_AUTH_DOMAIN,
@@ -15,20 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Listen for auth state changes
-export const observeAuth = setUser => {
-  return onAuthStateChanged(auth, setUser);
-};
-
-// Sign in as an anonymous user
-export const signInAnonymouslyUser = async () => {
-  await signInAnonymously(auth);
-};
-
-// Sign out the current user
-export const signOutUser = async () => {
-  await signOut(auth);
-};
+export { auth };
 
 export const getUserVotes = (userId, callback) => {
   const votesRef = collection(db, 'votes');
@@ -73,4 +61,30 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-export { auth, db };
+export const signUpWithEmail = async (email, password) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return { user: userCredential.user };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const signInWithEmail = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return { user: userCredential.user };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
+
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+    console.log('User signed out');
+  } catch (error) {
+    console.error('Error signing out:', error);
+  }
+};
