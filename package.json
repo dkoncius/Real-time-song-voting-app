@@ -11,6 +11,7 @@
     "add-songs": "node src/addSongs.js"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "firebase": "^10.1.0",
     "firebase-admin": "^11.10.1",

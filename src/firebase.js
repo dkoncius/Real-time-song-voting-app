@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot, setDoc } from 'firebase/firestore';
-import { getAuth, signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-
+import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { getAuth, signOut, GoogleAuthProvider,  signInWithRedirect, OAuthProvider  } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -62,7 +61,7 @@ export const voteForSong = async (userId, songId) => {
   }
 };
 
-// Login with google
+// Sign in with google
 export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   try {
@@ -72,46 +71,17 @@ export const signInWithGoogle = async () => {
   }
 };
 
-
-// Login with email
-export const checkUserExists = async (email) => {
-  const usersRef = collection(db, 'users');
-  const snapshot = await getDocs(query(usersRef, where("email", "==", email)));
-
-  return snapshot.size > 0;
-};
-
-
-export const addUser = async (email) => {
-  const userRef = doc(db, 'users', email);
-  await setDoc(userRef, { email });
-
-  // Send the sign-in link after creating the user
-  const actionCodeSettings = {
-    url: window.location.href,
-    handleCodeInApp: true,
-  };
-  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-};
-export const sendLoginLink = async (email) => {
-  const actionCodeSettings = {
-    url: window.location.href, // The URL to redirect to for sign-in completion.
-    handleCodeInApp: true // This must be true for email link sign-in.
-  };
-
-  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-};
-
-export const confirmSignIn = async (email) => {
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    try {
-      await signInWithEmailLink(auth, email, window.location.href);
-    } catch (error) {
-      throw error;
-    }
+// Sign in with Apple
+export const signInWithApple = async () => {
+  const provider = new OAuthProvider('apple.com');
+  try {
+    await signInWithRedirect(auth, provider);
+  } catch (error) {
+    throw error;
   }
 };
 
+// Sign out
 export const signOutUser = async () => {
   try {
     await signOut(auth);
