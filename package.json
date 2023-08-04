@@ -22,6 +22,7 @@
     "react-intersection-observer": "^9.5.2",
     "react-router-dom": "^6.14.2",
     "react-spotify-embed": "^2.0.3",
+    "sass": "^1.64.2",
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {
