@@ -1,0 +1,168 @@
+.songs {
+  background-image: url("../assets/cards-section-bg.png");
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;;
+  background-color: #E2E2E2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 20%, #E2E2E2 80%);
+  }
+}
+
+
+.songs-grid {
+  width: 90%;
+  max-width: 1444px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin: auto;
+  padding: 50px 0;
+  transition: 0.3s;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.song-card {
+  position: relative;
+  text-align: center;
+  border-radius: 20px;
+  transition: 1s;
+
+  &:hover {
+    background: black;
+  }
+
+  .rank {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background: $primary-color;
+    border-radius: 10px 0 10px 0;
+    z-index: 1;
+    box-shadow: 0 0 0 white;
+    transition: 0.3s;
+  }
+
+  .votes-count {
+    width: 100%;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    gap: 10px;
+    font-size: 1.8em;
+  }
+
+  iframe {
+    width: 100%;
+    height: 352px;
+    border: none;
+    border-radius: 15px;
+  }
+
+  &:hover {
+    .rank {
+      box-shadow: 0 0 2px white;
+    }
+
+    .votes-count {
+      cursor: pointer;
+      color: $primary-color;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 200px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  color: #8e8e8e;
+  border-radius: 5px;
+  padding: 30px;
+
+  input, button {
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    transition: 0.3s;
+
+    &::placeholder {
+      color: white;
+      opacity: 0.5;
+    }
+
+    &:focus {
+      background: skyblue;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: #323232;
+    }
+  }
+
+  .userNotFound, .success {
+    color: white;
+    width: 100%;
+    border-radius: 4px;
+    padding: 5px;
+  }
+
+  .userNotFound {
+    background: crimson;
+  }
+
+  .success {
+    background: yellowgreen;
+  }
+
+  .link {
+    font-weight: bold;
+    text-decoration: underline;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.iframe-wrapper {
+  opacity: 0;
+}
+
+.description h1 {
+  text-align: center;
+  font-size: 1.5em;
+}

@@ -56,7 +56,7 @@ const Login = ({ user, setUser }) => {
           user && 
 
           <h3 className={`header-votes ${isBlinking ? 'blink' : ''} ${votes >= MAX_VOTES ? 'no-votes-left' : ''}`}>
-            BALSAI: <span>{user ? MAX_VOTES - votes : 0}</span>
+            likę balsai: <span>{user ? MAX_VOTES - votes : 0}</span>
           </h3>
         }
 

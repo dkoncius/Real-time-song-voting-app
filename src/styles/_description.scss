@@ -1,0 +1,97 @@
+.description-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: $primary-color;
+  font-family: $font-title;
+
+  .left {
+    width: 100%;
+    
+    @media (max-width: $tablet){
+      width: 50%;
+    }
+
+    h1 {
+      position: relative;
+      left: 70%;
+      font-size: 2.2em;
+      text-align: start;
+      width: 80%;
+      z-index: 1;
+      
+      @media (max-width: $desktop){
+        font-size: 1.5em;
+        width: 100%;
+        left: 30%;
+      }
+
+      @media (max-width: $tablet){
+        font-size: 1.5em;
+        width: 300px;
+        left: 70%;
+      }
+
+      @media (max-width: $mobile){
+        font-size: 1.2em;
+        width: 300px;
+        left: 70%;
+      }
+    }
+  }
+
+  .clip-path {
+    width: 100%;
+    height: 300px;
+    -webkit-clip-path: circle(45% at 95% 50%);
+    clip-path: circle(45% at 95% 50%);
+    object-fit: cover;
+    object-position: center;
+    position: relative;
+    overflow: hidden;
+
+    @media (max-width: $desktop){
+      height: 250px;
+      -webkit-clip-path: circle(38% at 95% 50%);
+      clip-path: circle(38% at 95% 50%);
+    }
+
+    @media (max-width: $mobile){
+      height: 180px;
+      -webkit-clip-path: circle(38% at 95% 50%);
+      clip-path: circle(38% at 95% 50%);
+    }
+
+    img {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      max-width: 600px;
+      object-fit: contain;
+    }
+  }
+}
+
+
+.description-text {
+  background-color: $primary-color;
+  text-align: center;
+
+  .container {
+    padding: 30px 0;
+    max-width: 1000px;
+    width: 90%;
+    margin: auto;
+  }
+  
+  h2 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: $font-title;
+  }
+
+  p {
+    margin-bottom: 30px;
+  }
+}

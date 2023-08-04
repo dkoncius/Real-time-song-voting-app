@@ -32,8 +32,8 @@ const SignUpForm = ({ setUser }) => {
     }
 
     const response = await signUpWithEmail(email, password);
-    if (response.error) {
-      setError(response.error);
+    if (response.error === "Firebase: Error (auth/email-already-in-use).") {
+      setError("Toks el. paštas jau naudojamas.");
       setSuccess('');
     } else {
       setEmail('');

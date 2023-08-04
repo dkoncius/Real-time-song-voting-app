@@ -46,10 +46,12 @@ function App() {
             <Route path="/" element={
               <>
                 {user &&  
-                <div className="songs-grid">
-                  {sortedSongs.map((song, index) => (
+                <div className="songs">
+                  <div className="songs-grid">
+                    {sortedSongs.map((song, index) => (
                     <SongCard key={song.id} song={song} votes={votes} user={user} setVotes={setVotes} rank={index + 1} />
-                  ))}
+                    ))}
+                  </div>
                 </div>}
               </>
             } />
