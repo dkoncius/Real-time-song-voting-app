@@ -1,59 +1,73 @@
+// LoginForm.jsx
 import { useState, useEffect } from 'react';
-import { auth, signInWithEmail } from '../firebase';
-import SignUpForm from './SignUpForm';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOutUser, auth, signInWithEmail } from '../firebase';
 
-const LoginForm = ({ setShowingForm }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showSignUpForm, setShowSignUpForm] = useState(false);
+const LoginForm = ({ setUser, setShowingForm }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [user, setUser] = useState(null); // new state to track the current user
+  const navigate = useNavigate();
 
   // Listen to auth state changes
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      setUser(user);
+      if (user) {
+        setUser(user);
+        navigate.push('/');
+        setShowingForm(false);
+      }
     });
-    return unsubscribe; // make sure to unsubscribe on component unmount
-  }, []);
+    return unsubscribe;
+  }, [setUser, setShowingForm, navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     const response = await signInWithEmail(email, password);
-    if(response.error) {
-      setError(response.error);
+    if (response.error) {
+      switch (response.error) {
+        case 'Firebase: Error (auth/user-not-found).':
+          setError('Vartotojas nerastas');
+          break;
+        case 'Firebase: Error (auth/wrong-password).':
+          setError('Neteisingas slaptažodis');
+          break;
+        case 'Prašome patvirtinti paštą prieš prisijungiant.':
+          setError('Prašome patvirtinti paštą prieš prisijungiant.');
+          break;
+        default:
+          setError(response.error);
+      }
+      signOutUser(); // Sign out the user
+    } else if (!auth.currentUser.emailVerified) {
+      setError('Prašome patvirtinti paštą prieš prisijungiant.');
+      signOutUser(); // Sign out the user
     } else {
       setEmail('');
       setPassword('');
-      setShowingForm(false);
+      navigate('/');
     }
   };
 
-  if (user) return null; // if a user is authenticated, don't show the form
-
-  if (showSignUpForm) {
-    return <SignUpForm setShowSignUpForm={setShowSignUpForm} />;
-  }
-
   return (
     <form onSubmit={handleSignIn}>
-      <input 
-        type="email" 
-        placeholder="Enter email" 
-        value={email} 
-        onChange={e => setEmail(e.target.value)} 
-        required 
+      <input
+        type="email"
+        placeholder="El. paštas"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
       />
-      <input 
-        type="password" 
-        placeholder="Enter password" 
-        value={password} 
-        onChange={e => setPassword(e.target.value)} 
-        required 
+      <input
+        type="password"
+        placeholder="Slaptažodis"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
       />
       <button type="submit">Prisijungti</button>
-      {error && <p>{error}</p>}
-      <p>Naujas vartotojas? <span onClick={() => setShowSignUpForm(true)}>Registruotis</span></p>
+      {error && <p className="userNotFound">{error}</p>}
+      <p>Naujas vartotojas? <Link to="/signup">Registruotis</Link></p>
     </form>
   );
 };

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification , signOut } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -64,11 +64,16 @@ export const voteForSong = async (userId, songId) => {
 export const signUpWithEmail = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Send verification email
+    await sendEmailVerification(userCredential.user);
+    
     return { user: userCredential.user };
   } catch (error) {
     return { error: error.message };
   }
 };
+
 
 export const signInWithEmail = async (email, password) => {
   try {
@@ -82,8 +87,7 @@ export const signInWithEmail = async (email, password) => {
 
 export const signOutUser = async () => {
   try {
-    await signOut(auth);
-    console.log('User signed out');
+    await auth.signOut();
   } catch (error) {
     console.error('Error signing out:', error);
   }
