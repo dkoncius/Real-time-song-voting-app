@@ -44,6 +44,11 @@ header {
     box-shadow: 0 0 5px black;
     transition: 0.3s;
 
+    @media (max-width: $mobile){
+      padding: 10px;
+      font-size: 1em;
+    }
+
     span {
       font-family: $font-title;
     }
