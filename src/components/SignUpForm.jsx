@@ -3,6 +3,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOutUser, signUpWithEmail } from '../firebase';
 import similar from 'string-similarity'; // new import
+import { motion } from 'framer-motion';
+
+const variants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const SignUpForm = ({ setUser }) => {
   const [email, setEmail] = useState('');
@@ -45,32 +51,37 @@ const SignUpForm = ({ setUser }) => {
   };
 
   return (
-    <form onSubmit={handleSignUp}>
-    {!success && (
-      <>
-        <input
-          type="email"
-          placeholder="El. paštas"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Slaptažodis"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Registruotis</button>
-        <p>Jau turite paskyrą? <Link to="/login">Prisijungti</Link></p>
-      </>
-    )}
-      
-    {error && <p className="userNotFound">{error}</p>}
-    {success && <p className='success'>{success}</p>}
-  </form>
-  );
+    <motion.form
+      onSubmit={handleSignUp}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.5 }}
+    >
+      {!success && (
+        <>
+          <input
+            type="email"
+            placeholder="El. paštas"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Slaptažodis"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Registruotis</button>
+          <p>Jau turite paskyrą? <Link to="/login">Prisijungti</Link></p>
+        </>
+      )}
+      {error && <p className="userNotFound">{error}</p>}
+      {success && <p className='success'>{success}</p>}
+    </motion.form>
+  );  
 };
 
 export default SignUpForm;

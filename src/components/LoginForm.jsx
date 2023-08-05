@@ -2,6 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOutUser, auth, signInWithEmail } from '../firebase';
+import { motion } from 'framer-motion';
+
+const variants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 
 const LoginForm = ({ setUser, setShowingForm }) => {
   const [email, setEmail] = useState('');
@@ -50,7 +57,13 @@ const LoginForm = ({ setUser, setShowingForm }) => {
   };
 
   return (
-    <form onSubmit={handleSignIn}>
+    <motion.form
+      onSubmit={handleSignIn}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.5 }}
+    >
       <input
         type="email"
         placeholder="El. paštas"
@@ -68,8 +81,9 @@ const LoginForm = ({ setUser, setShowingForm }) => {
       <button type="submit">Prisijungti</button>
       {error && <p className="userNotFound">{error}</p>}
       <p>Naujas vartotojas? <Link to="/signup">Registruotis</Link></p>
-    </form>
+    </motion.form>
   );
+  
 };
 
 export default LoginForm;
