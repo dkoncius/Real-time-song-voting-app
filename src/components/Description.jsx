@@ -1,5 +1,5 @@
 import React from 'react'
-import titleImage from '../assets/title.png'
+import titleImage from '../assets/title2.jpg'
 
 const Description = () => {
   return (
