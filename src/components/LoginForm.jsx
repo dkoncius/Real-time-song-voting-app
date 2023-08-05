@@ -1,7 +1,7 @@
 // LoginForm.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOutUser, auth, signInWithEmail } from '../firebase';
+import { signOutUser, auth, signInWithEmail, resetPassword  } from '../firebase';
 import { motion } from 'framer-motion';
 
 const variants = {
@@ -15,6 +15,8 @@ const LoginForm = ({ setUser, setShowingForm }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [resetRequested, setResetRequested] = useState(false);
+
 
   // Listen to auth state changes
   useEffect(() => {
@@ -56,6 +58,16 @@ const LoginForm = ({ setUser, setShowingForm }) => {
     }
   };
 
+  const handleResetPassword = async () => {
+    const response = await resetPassword(email);
+    if (response.success) {
+      setResetRequested(true);
+    } else {
+      setError(response.error);
+    }
+  };
+  
+
   return (
     <motion.form
       onSubmit={handleSignIn}
@@ -79,7 +91,14 @@ const LoginForm = ({ setUser, setShowingForm }) => {
         required
       />
       <button type="submit">Prisijungti</button>
-      {error && <p className="userNotFound">{error}</p>}
+
+        {error === 'Neteisingas slaptažodis' && (
+        <p className="userNotFound">
+          {error}. <span onClick={handleResetPassword} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Pamiršote slaptažodį?</span>
+        </p>
+      )}
+      {resetRequested && <p className="passwordReset">Slaptažodžio atstatymo nuoroda išsiųsta į {email}.</p>}
+      {error && error !== 'Neteisingas slaptažodis' && <p className="userNotFound">{error}</p>}
       <p>Naujas vartotojas? <Link to="/signup">Registruotis</Link></p>
     </motion.form>
   );
