@@ -4,7 +4,6 @@
   justify-content: space-between;
   background-color: black;
   color: $primary-color;
-  font-family: $font-title;
   position: relative;
 
   .left {
@@ -15,8 +14,9 @@
     }
 
     h1 {
+      font-family: $font-title;
       position: relative;
-      left: 70%;
+      left: 50%;
       font-size: 2.2em;
       text-align: start;
       width: 80%;
@@ -25,13 +25,12 @@
       @media (max-width: $desktop){
         font-size: 1.5em;
         width: 100%;
-        left: 30%;
       }
 
       @media (max-width: $tablet){
         font-size: 1.5em;
-        width: 20px;
-        left: 100%;
+        width: 160%;
+        left: 50%;
       }
 
       @media (max-width: $mobile){
@@ -78,6 +77,7 @@
       object-fit: contain;
 
       @media (max-width: $mobile){
+        left: -50%;
         height: 75%;
         width: 200%;
       }
