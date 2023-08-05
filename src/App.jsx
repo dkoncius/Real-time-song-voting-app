@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
 import { getSongs, auth } from './firebase';
+import { Footer } from "./components/Footer";
 
 function App() {
   const [songs, setSongs] = useState([]);
@@ -59,6 +60,8 @@ function App() {
             <Route path="/login" element={<LoginForm setUser={setUser} />} />
             <Route path="/signup" element={<SignUpForm setUser={setUser} />} />
           </Routes>
+
+          <Footer/>
         </>
       )}
     </Router>
