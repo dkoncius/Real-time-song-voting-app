@@ -1,0 +1,46 @@
+footer {
+    background: $gray-color;
+
+    .container {
+        width: 90%;
+        height: 100px;
+        max-width: 1440px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: auto;
+
+        @media (max-width: $mobile){
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+    
+
+        a {
+            color: gray;
+
+            &:hover {
+                color: black;
+            }
+        }
+       
+
+        .social {
+            display: flex;
+
+            @media (max-width: $mobile){
+                gap: 30px;
+            }
+
+            a {
+                margin-right: 50px;
+
+                @media (max-width: $mobile){
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+}
