@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification , signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification , signOut, sendPasswordResetEmail  } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -90,5 +90,15 @@ export const signOutUser = async () => {
     await auth.signOut();
   } catch (error) {
     console.error('Error signing out:', error);
+  }
+};
+
+
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { success: 'Password reset email sent!' };
+  } catch (error) {
+    return { error: error.message };
   }
 };

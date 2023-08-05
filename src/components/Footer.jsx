@@ -8,15 +8,15 @@ export const Footer = () => {
             <div className="social">
 
                 <a href="https://www.facebook.com/GabrieleIrGrupe" target='_blank'>
-                    <i class="fa-brands fa-facebook"></i>
+                    <i className="fa-brands fa-facebook"></i>
                 </a>
                 
                 <a href="https://open.spotify.com/artist/7ELi3uyapJifMkzTDE3owW" target='_blank'>
-                    <i class="fa-brands fa-spotify"></i>
+                    <i className="fa-brands fa-spotify"></i>
                 </a>
 
                 <a href="https://www.youtube.com/channel/UCl5cJtLYAFYPZayS9_V2MjQ" target='_blank'>
-                    <i class="fa-brands fa-youtube"></i>
+                    <i className="fa-brands fa-youtube"></i>
                 </a>
 
             </div>
