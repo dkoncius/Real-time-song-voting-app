@@ -6,6 +6,7 @@ import { Loading } from './Loading';
 const SongCard = ({ song, votes, user, setVotes, rank }) => {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [retryCount, setRetryCount] = useState(0); // Counter to track retries
   const songVotes = useMemo(() => votes[song.id] || 0, [votes, song.id]);
 
   const handleClick = async () => {
@@ -18,13 +19,24 @@ const SongCard = ({ song, votes, user, setVotes, rank }) => {
   };
 
   useEffect(() => {
-    const delay = rank * 500; // Delay based on rank
+    const delay = rank * 500; // Initial delay based on rank
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, delay);
 
-    return () => clearTimeout(timer); // Clear timeout if the component is unmounted
+    return () => clearTimeout(timer);
   }, [rank]);
+
+  useEffect(() => {
+    if (isLoaded && !iframeLoaded && retryCount < 5) { // Limit to 5 retries
+      const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential back-off
+      const retryTimer = setTimeout(() => {
+        setRetryCount(retryCount + 1); // Increment retry counter
+      }, retryDelay);
+
+      return () => clearTimeout(retryTimer);
+    }
+  }, [isLoaded, iframeLoaded, retryCount]);
 
   return (
     <>
