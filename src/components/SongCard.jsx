@@ -11,7 +11,6 @@ const SongCard = ({ song, votes, user, setVotes, rank }) => {
   const songVotes = useMemo(() => votes[song.id] || 0, [votes, song.id]);
 
   const handleClick = async () => {
-    console.log("Attempting to vote for song:", song.id, "by user:", user.userId); // Debug log
 
     const success = await voteForSong(user.userId, song.id);
     if (success) {

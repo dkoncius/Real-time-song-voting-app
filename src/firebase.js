@@ -64,8 +64,6 @@ export const handleUserByIP = async () => {
   }
 };
 
-
-
 export const getSongs = async () => {
   const snapshot = await getDocs(collection(db, 'songs'));
   const songs = [];
@@ -90,28 +88,45 @@ export const voteForSong = async (userId, songId) => {
   const querySnapshot = await getDocs(query(ipsRef, where('userId', '==', userId)));
   const ipDoc = querySnapshot.docs[0];
 
-  if (ipDoc.data().votes <= 0) {
+  // Check if there is no votes left today
+  if (!ipDoc || ipDoc.data().votes <= 0) {
     alert("Išnaudojote dienos limitą. Penki balsai per dieną :)");
-    console.log("User has already voted 5 times today.");
     return false;
   }
 
-  const songRef = doc(db, 'songs', songId);
-  const songSnap = await getDoc(songRef);
+  // Check if the user's lastVoteTime is older than 24 hours
+  const lastVoteTime = ipDoc.data().lastVoteTime.toMillis(); // Convert Firebase Timestamp to milliseconds
+  const currentTime = Date.now(); // Current time in milliseconds
+  const timeDiff = currentTime - lastVoteTime;
+  const hoursPassed = timeDiff / (1000 * 60 * 60);
 
-  if (songSnap.exists()) {
-    // Increment votes for the song
-    await updateDoc(songRef, { votes: increment(1) });
-
-    // Decrement the user's vote count and update last vote time in the 'ips' collection
-    await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromDate(new Date()) });
-
-    return true;
+  // Reset votes if 24 hours passed
+  if (hoursPassed >= 24) {
+    // Reset user's vote count and update lastVoteTime
+    await updateDoc(ipDoc.ref, { votes: 5, lastVoteTime: Timestamp.fromMillis(currentTime) });
   } else {
-    console.log(`No song with ID ${songId} exists.`);
-    return false;
+    const songRef = doc(db, 'songs', songId);
+    const songSnap = await getDoc(songRef);
+
+    if (songSnap.exists()) {
+      // Increment votes for the song
+      await updateDoc(songRef, { votes: increment(1) });
+
+      // Decrement the user's vote count and update last vote time in the 'ips' collection
+      await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromMillis(currentTime) });
+
+      return true;
+    } else {
+      console.log(`No song with ID ${songId} exists.`);
+      return false;
+    }
   }
+
+  // Calculate the time left until the reset
+  const hoursLeft = 24 - hoursPassed;
+  console.log(`You can vote again in ${hoursLeft.toFixed(2)} hours.`);
 };
+
 
 export const getUserVotes = (userId, callback) => {
   // Query the 'ips' collection to find the document with the given userId
