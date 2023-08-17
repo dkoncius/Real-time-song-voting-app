@@ -1,68 +1,39 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signOutUser, auth, getUserVotes } from '../firebase';
+import React, { useEffect, useState } from 'react';
+import { handleUserByIP, getUserVotes } from '../firebase';
 
-const MAX_VOTES = 5;
+const NO_VOTES_LEFT = 5;
 
 const Login = ({ user, setUser }) => {
-  const [votes, setVotes] = useState(0);
-  const [unsubscribeVotes, setUnsubscribeVotes] = useState(null);
-  const [isBlinking, setIsBlinking] = useState(false);
-  const [emailVerified, setEmailVerified] = useState(false); // state to track email verification
-
-  const navigate = useNavigate();
+  const [votes, setVotes] = useState(null);
 
   useEffect(() => {
-    const unsubscribeAuth = auth.onAuthStateChanged(user => {
-      setUser(user);
-      setEmailVerified(user ? user.emailVerified : false); // set email verification state when user logs in/out
-      if (user) {
-        const unsubscribe = getUserVotes(user.uid, newVotes => {
-          if (newVotes > votes) {
-            setIsBlinking(true);
-            setTimeout(() => setIsBlinking(false), 1000);
-          }
-          setVotes(newVotes);
-        });
-        setUnsubscribeVotes(() => unsubscribe);
-      } else {
-        if (unsubscribeVotes) {
-          unsubscribeVotes();
-        }
-        setVotes(0);
-      }
-    });
+    const handleUser = async () => {
+      const userObject = await handleUserByIP();
+      if (userObject) {
+        setUser(userObject);
+        setVotes(userObject.votes); // Set initial votes
 
-    return () => {
-      unsubscribeAuth();
-      if (unsubscribeVotes) {
-        unsubscribeVotes();
+        // Subscribe to real-time updates for the votes
+      const unsubscribe = getUserVotes(userObject.userId, newVotes => {
+        setVotes(newVotes);
+      });
+
+
+        return () => unsubscribe(); // Clean up the subscription on unmount
       }
     };
-  }, [setUser, unsubscribeVotes, votes]);
 
-  const handleSignOut = async () => {
-    await signOutUser();
-  };
-
-  const handleSignIn = () => {
-    navigate('/login');
-  };
+    handleUser();
+  }, [setUser]);
 
   return (
     <header>
       <div className="container">
-        {
-          user && 
-
-          <h3 className={`header-votes ${isBlinking ? 'blink' : ''} ${votes >= MAX_VOTES ? 'no-votes-left' : ''}`}>
-            likę balsai: <span>{user ? MAX_VOTES - votes : 0}</span>
+        {user && (
+          <h3 className={`header-votes ${votes <= NO_VOTES_LEFT ? 'no-votes-left' : ''}`}>
+            likę balsai: <span>{votes}</span>
           </h3>
-        }
-
-        {user ? 
-        <button onClick={handleSignOut}>Atsijungti</button> : 
-        <button onClick={handleSignIn}>Prisijungti</button>}
+        )}
       </div>
     </header>
   );
