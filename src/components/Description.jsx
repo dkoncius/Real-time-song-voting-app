@@ -46,6 +46,8 @@ const Description = () => {
       </section>
       <section className='description-text'>
         <div className="container">
+          <p>2024 metų vasarą šiuolaikinės krikščioniškos muzikos dainininkė Gabrielė Gvazdikaitė ruošia malonų siurprizą savo klausytojams - tai gražiausių atlikėjos giesmių koncertai su orkestru ir Berklee muzikos koledžą baigusiu pianistu Domu Žeromsku. Nepraleiskite progos ir dalyvaukite balsavime, o radijo stoties XFM klausytojų laukia malonūs prizai!</p>
+
           <p>Balsuok už mėgstamiausias Gabrielės Gvazdikaitės giesmes ir rugsėjo 29 dieną radijo stoties XFM Pavakario eteryje sužinok kokias 7 koncertuose su orkestru skambėsiančias giesmes išrinks klausytojai, o kokius 5 kūrinius - Gabrielė ir jos komanda! </p>
         </div>
       </section>
