@@ -64,11 +64,6 @@
     border: none;
     gap: 10px;
     font-size: 1.5em;
-
-    @media (max-width: $mobile) {
-      height: 30px;
-      padding-bottom: 10px;
-    }
   }
 
   iframe {
@@ -76,10 +71,6 @@
     height: 352px;
     border: none;
     border-radius: 15px;
-
-    @media (max-width: $mobile) {
-      height: 215px;
-    }
   }
 
   &:hover {
