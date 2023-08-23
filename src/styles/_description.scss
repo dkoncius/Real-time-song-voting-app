@@ -3,24 +3,29 @@
   color: $primary-color;
   position: relative;
 
+  @media(max-width: $mobile) {
+    background-color: transparent;
+  }
+
   .images {
     display: flex;
+    height: 60vh;
 
-    @media (max-width: $mobile){
-      min-height: 100vh;
+    @media(max-width: $mobile) {
+      height: 80vh;
     }
 
     img {
       width: 20%;
-      background-size: cover;
+      object-fit: cover;
 
       @media(max-width: $mobile) {
         display: none;
+        object-position: top;
 
         &:nth-of-type(4) {
           display: block;
           width: 100%;
-          background-size: cover;
         }
     }
     }
