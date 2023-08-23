@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth, getSongs, handleUserByIP } from './firebase';
-import Login from './components/Login';
+import Authentication from './components/Authentication';
 import SongCard from './components/SongCard';
 import Description from './components/Description';
 import { Footer } from './components/Footer';
@@ -40,11 +40,10 @@ function App() {
 
   return (
     <>
-      <Login user={user} setUser={setUser}/>
-      
       {isAuthChecked && (
         <>
           <Description/>
+          <Authentication user={user} setUser={setUser}/>
           
           {user &&  
           <div className="songs">

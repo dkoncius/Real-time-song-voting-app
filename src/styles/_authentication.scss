@@ -1,0 +1,14 @@
+.votes {
+    text-align: center;
+    font-family: $votes-title;
+    font-size: 30px;
+    font-weight: 700;
+
+    @media (max-width: $tablet) {
+        font-size: 24px;
+    }
+
+    span {
+        font-weight: 700;
+    }
+}
