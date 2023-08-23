@@ -6,6 +6,10 @@
   .images {
     display: flex;
 
+    @media (max-width: $mobile){
+      min-height: 100vh;
+    }
+
     img {
       width: 20%;
       background-size: cover;
