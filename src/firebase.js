@@ -17,6 +17,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from 'uuid';
 
+// For votes
 const VOTES_PER_DAY = 5;
 const MS_IN_AN_HOUR = 1000 * 60 * 60;
 
@@ -99,6 +100,8 @@ export const voteForSong = async (userId, songId) => {
   const timeDiff = currentTime - lastVoteTime;
   const hoursPassed = timeDiff / MS_IN_AN_HOUR;
 
+  console.log(hoursPassed)
+
   // Reset votes if 24 hours passed
   if (hoursPassed >= 24) {
       await updateDoc(ipDoc.ref, { votes: VOTES_PER_DAY, lastVoteTime: Timestamp.fromMillis(currentTime) });
@@ -123,15 +126,28 @@ export const voteForSong = async (userId, songId) => {
 };
 
 export const getUserVotes = (userId, callback) => {
-  // Query the 'ips' collection to find the document with the given userId
   const ipsRef = collection(db, 'ips');
   const queryRef = query(ipsRef, where('userId', '==', userId));
 
-  const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+  const unsubscribe = onSnapshot(queryRef, async (querySnapshot) => {
     const docSnapshot = querySnapshot.docs[0];
     if (docSnapshot) {
       const data = docSnapshot.data();
-      callback(data.votes); // Call the callback with the updated votes
+      const lastVoteTime = data.lastVoteTime.toMillis();
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastVoteTime;
+      const hoursPassed = timeDiff / MS_IN_AN_HOUR;
+
+      // Reset votes if 24 hours passed and update the data
+      if (hoursPassed >= 24) {
+        await updateDoc(docSnapshot.ref, { 
+          votes: VOTES_PER_DAY, 
+          lastVoteTime: Timestamp.fromMillis(currentTime) 
+        });
+        callback(VOTES_PER_DAY); 
+      } else {
+        callback(data.votes);
+      }
     } else {
       callback(0); // Call the callback with 0 if the document does not exist
     }
