@@ -17,6 +17,8 @@ import {
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from 'uuid';
 
+const VOTES_PER_DAY = 5;
+const MS_IN_AN_HOUR = 1000 * 60 * 60;
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -80,53 +82,45 @@ export const getSongs = async () => {
 
 export const voteForSong = async (userId, songId) => {
   if (!userId || !songId) {
-    return false;
+      return false;
   }
 
-  // Query the 'ips' collection to find the document with the given userId
   const ipsRef = collection(db, 'ips');
   const querySnapshot = await getDocs(query(ipsRef, where('userId', '==', userId)));
   const ipDoc = querySnapshot.docs[0];
 
-  // Check if there is no votes left today
-  if (!ipDoc || ipDoc.data().votes <= 0) {
-    alert("Išnaudojote dienos limitą. Penki balsai per dieną :)");
-    return false;
+  if (!ipDoc) {
+      alert("User not found.");
+      return false;
   }
 
-  // Check if the user's lastVoteTime is older than 24 hours
-  const lastVoteTime = ipDoc.data().lastVoteTime.toMillis(); // Convert Firebase Timestamp to milliseconds
-  const currentTime = Date.now(); // Current time in milliseconds
+  const lastVoteTime = ipDoc.data().lastVoteTime.toMillis();
+  const currentTime = Date.now();
   const timeDiff = currentTime - lastVoteTime;
-  const hoursPassed = timeDiff / (1000 * 60 * 60);
+  const hoursPassed = timeDiff / MS_IN_AN_HOUR;
 
   // Reset votes if 24 hours passed
   if (hoursPassed >= 24) {
-    // Reset user's vote count and update lastVoteTime
-    await updateDoc(ipDoc.ref, { votes: 5, lastVoteTime: Timestamp.fromMillis(currentTime) });
-  } else {
-    const songRef = doc(db, 'songs', songId);
-    const songSnap = await getDoc(songRef);
-
-    if (songSnap.exists()) {
-      // Increment votes for the song
-      await updateDoc(songRef, { votes: increment(1) });
-
-      // Decrement the user's vote count and update last vote time in the 'ips' collection
-      await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromMillis(currentTime) });
-
-      return true;
-    } else {
-      console.log(`No song with ID ${songId} exists.`);
-      return false;
-    }
+      await updateDoc(ipDoc.ref, { votes: VOTES_PER_DAY, lastVoteTime: Timestamp.fromMillis(currentTime) });
   }
 
-  // Calculate the time left until the reset
-  const hoursLeft = 24 - hoursPassed;
-  console.log(`You can vote again in ${hoursLeft.toFixed(2)} hours.`);
-};
+  if (ipDoc.data().votes <= 0) {
+      alert("Išnaudojote dienos limitą. Penki balsai per dieną :)");
+      return false;
+  }
 
+  const songRef = doc(db, 'songs', songId);
+  const songSnap = await getDoc(songRef);
+
+  if (songSnap.exists()) {
+      await updateDoc(songRef, { votes: increment(1) });
+      await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromMillis(currentTime) });
+      return true;
+  } else {
+      console.log(`No song with ID ${songId} exists.`);
+      return false;
+  }
+};
 
 export const getUserVotes = (userId, callback) => {
   // Query the 'ips' collection to find the document with the given userId
