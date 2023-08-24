@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
-import titleImage1 from '../assets/title images/1.png'
-import titleImage2 from '../assets/title images/2.png'
-import titleImage3 from '../assets/title images/3.png'
-import titleImage4 from '../assets/title images/4.png'
-import titleImage5 from '../assets/title images/5.png'
+import titleImage1 from '../assets/title images/webp/1.webp'
+import titleImage2 from '../assets/title images/webp/2.webp'
+import titleImage3 from '../assets/title images/webp/3.webp'
+import titleImage4 from '../assets/title images/webp/4.webp'
+import titleImage5 from '../assets/title images/webp/5.webp'
 
 const Description = () => {
   const controls1 = useAnimation();
