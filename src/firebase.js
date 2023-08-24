@@ -95,8 +95,9 @@ export const voteForSong = async (userId, songId) => {
       return false;
   }
 
-  const lastVoteTime = ipDoc.data().lastVoteTime.toMillis();
   const currentTime = Date.now();
+  let lastVoteTime = ipDoc.data().lastVoteTime?.toMillis() || currentTime
+
   const timeDiff = currentTime - lastVoteTime;
   const hoursPassed = timeDiff / MS_IN_AN_HOUR;
 
@@ -133,8 +134,8 @@ export const getUserVotes = (userId, callback) => {
     const docSnapshot = querySnapshot.docs[0];
     if (docSnapshot) {
       const data = docSnapshot.data();
-      const lastVoteTime = data.lastVoteTime.toMillis();
       const currentTime = Date.now();
+      const lastVoteTime = data.lastVoteTime?.toMillis() || currentTime
       const timeDiff = currentTime - lastVoteTime;
       const hoursPassed = timeDiff / MS_IN_AN_HOUR;
 
