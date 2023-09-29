@@ -117,8 +117,9 @@ export const voteForSong = async (userId, songId) => {
   const songSnap = await getDoc(songRef);
 
   if (songSnap.exists()) {
-      await updateDoc(songRef, { votes: increment(1) });
-      await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromMillis(currentTime) });
+      // await updateDoc(songRef, { votes: increment(1) });
+      // await updateDoc(ipDoc.ref, { votes: increment(-1), lastVoteTime: Timestamp.fromMillis(currentTime) });
+      alert("Balsavimas baigėsi :)")
       return true;
   } else {
       console.log(`No song with ID ${songId} exists.`);
