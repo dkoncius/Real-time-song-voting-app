@@ -14,7 +14,8 @@ const SongCard = ({ song, votes, user, setVotes, rank }) => {
 
     const success = await voteForSong(user.userId, song.id);
     if (success) {
-      setVotes(prevVotes => ({ ...prevVotes, [song.id]: (prevVotes[song.id] || 0) + 1 }));
+      // setVotes(prevVotes => ({ ...prevVotes, [song.id]: (prevVotes[song.id] || 0) + 1 }));
+      console.log("Balsavimas baigėsi")
     } else {
       console.log("Vote was not successful.");
     }
